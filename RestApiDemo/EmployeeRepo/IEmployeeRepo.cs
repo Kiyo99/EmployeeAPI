@@ -1,10 +1,10 @@
-﻿using RestApiDemo.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using RestApiDemo.Models;
 
-namespace RestApiDemo.EmployeeData
+namespace RestApiDemo.EmployeeRepo
 {
-    public interface IEmployeeData
+    public interface IEmployeeRepo
     {
 
         List<Employee> getEmployees();
@@ -15,6 +15,8 @@ namespace RestApiDemo.EmployeeData
 
         void DeleteEmployee(Employee employee);
 
-        Employee EditEmployee(Employee employee);       
+        Employee EditEmployee(Employee employee);
+
+        Employee requestLeave(Guid id);
     }
 }

@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RestApiDemo.EmployeeData
+namespace RestApiDemo.EmployeeRepo
 {
-    public class MockEmployeeData : IEmployeeData
+    public class MockEmployeeData : IEmployeeRepo
 
     {
 
@@ -14,13 +14,25 @@ namespace RestApiDemo.EmployeeData
             new Employee()
             {
                 Id = Guid.NewGuid(),
-                Name = "Mr Arthur"
+                Name = "Mr Arthur",
+                age = 40,
+                leaveStatus = "notOnLeave"
             },
            new Employee()
            {
                 Id = Guid.NewGuid(),
-                Name = "Mr Kio"
+                Name = "Mr Kio",
+                age = 30,
+                leaveStatus = "notOnLeave"
+
            },
+           new Employee()
+           {
+                Id = Guid.NewGuid(),
+                Name = "Emefa",
+                age = 30,
+                leaveStatus = "notOnLeave"
+           }
         };
 
         public Employee AddEmployee(Employee employee)
@@ -39,6 +51,8 @@ namespace RestApiDemo.EmployeeData
         {
             var ExistingEmployee = getEmployee(employee.Id);
             ExistingEmployee.Name = employee.Name;
+            ExistingEmployee.age = employee.age;
+            ExistingEmployee.leaveStatus = employee.leaveStatus;
             return ExistingEmployee;
         }
 
@@ -50,6 +64,14 @@ namespace RestApiDemo.EmployeeData
         public List<Employee> getEmployees()
         {
            return employees;
+        }
+
+        public Employee requestLeave(Guid id)
+        {
+            var exisitingEmployee = getEmployee(id);
+            exisitingEmployee.leaveStatus = "onLeave";
+            return exisitingEmployee;
+
         }
     }
 }

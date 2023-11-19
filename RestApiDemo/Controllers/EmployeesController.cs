@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RestApiDemo.EmployeeData;
+using RestApiDemo.EmployeeRepo;
 using RestApiDemo.Models;
-using System;
 
 namespace RestApiDemo.Controllers
 {
@@ -10,18 +10,18 @@ namespace RestApiDemo.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
-        private IEmployeeData _employeeData;
+        private IEmployeeRepo _employeeRepo;
 
-        public EmployeesController(IEmployeeData employeeData)
+        public EmployeesController(IEmployeeRepo employeeRepo)
         {
-            _employeeData = employeeData;
+            _employeeRepo = employeeRepo;
         }
 
         [HttpGet("")]
         [Route("api/[controller]")]
         public IActionResult GetEmployees()
         {
-            return Ok(_employeeData.getEmployees());
+            return Ok(_employeeRepo.getEmployees());
         }
 
         [HttpGet("")]
@@ -29,7 +29,7 @@ namespace RestApiDemo.Controllers
         public IActionResult GetEmployee(Guid id)
         {
 
-            var employee = _employeeData.getEmployee(id);
+            var employee = _employeeRepo.getEmployee(id);
 
             if (employee != null) 
 
@@ -46,7 +46,7 @@ namespace RestApiDemo.Controllers
         public IActionResult AddEmployee(Employee employee)
         {
 
-             _employeeData.AddEmployee(employee);
+             _employeeRepo.AddEmployee(employee);
 
             return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host +
                 HttpContext.Request.Path + "/" + employee.Id, employee);
@@ -58,13 +58,13 @@ namespace RestApiDemo.Controllers
         public IActionResult DeleteEmployee(Guid id)
         {
 
-            var employee = _employeeData.getEmployee(id);
+            var employee = _employeeRepo.getEmployee(id);
            
 
             if (employee != null)
 
             {
-                _employeeData.DeleteEmployee(employee);
+                _employeeRepo.DeleteEmployee(employee);
                 return Ok($"Employee with ID: {id} was deleted");
             }
 
@@ -76,18 +76,34 @@ namespace RestApiDemo.Controllers
         [Route("api/[controller]/edit/{id}")]
         public IActionResult EditEmployee(Guid id, Employee employee)
         {
-            var ExistingEmployee = _employeeData.getEmployee(id);
+            var ExistingEmployee = _employeeRepo.getEmployee(id);
 
             if (ExistingEmployee != null)
             {
 
                 employee.Id = ExistingEmployee.Id;
-                _employeeData.EditEmployee(employee);
+                _employeeRepo.EditEmployee(employee);
                 return Ok(employee);
             }
 
             return NotFound($"Employee with ID: {id} was not found");
 
+        }
+
+        [HttpPost("")]
+        [Route("api/[controller]/requestLeave/{id}")]
+        public IActionResult requestLeave(Guid id)
+        {
+            var existingEmployee = _employeeRepo.getEmployee(id);
+
+            if (existingEmployee != null)
+            {
+                var updatedEmployee = _employeeRepo.requestLeave(id);
+                return Ok($"Your status has been approved, {updatedEmployee.Name}. Your new status is: {updatedEmployee.leaveStatus}");
+            }
+
+            return NotFound($"Employee with ID: {id} was not found");
+            
         }
 
     }

@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using RestApiDemo.EmployeeData;
+using RestApiDemo.EmployeeRepo;
 
 
 namespace RestApiDemo
@@ -28,7 +28,7 @@ namespace RestApiDemo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSingleton<IEmployeeData, MockEmployeeData>();
+            services.AddSingleton<IEmployeeRepo, MockEmployeeData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
